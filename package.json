@@ -1,0 +1,15 @@
+{
+  "name": "asthra-v4",
+  "version": "0.1.0",
+  "description": "ASTHRA V4 is a local Codex-inspired agentic workstation powered by OpenRouter with automatic free-model rotation and persistent automations.",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "node --watch src/server.js",
+    "test": "node --test --test-concurrency=1 --experimental-test-isolation=none tests/*.test.js"
+  },
+  "engines": {
+    "node": ">=22"
+  }
+}

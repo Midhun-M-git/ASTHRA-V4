@@ -1,0 +1,223 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>ASTHRA V4</title>
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <aside class="sidebar">
+        <div class="brand-card">
+          <p class="eyebrow">Agentic Workstation</p>
+          <h1>ASTHRA V4</h1>
+          <p class="brand-copy">Provider-aware coding, automation, and OpenRouter free-model failover in one local console.</p>
+        </div>
+
+        <nav class="nav-tabs">
+          <button class="nav-tab active" data-tab="chat">Chat</button>
+          <button class="nav-tab" data-tab="automations">Automations</button>
+          <button class="nav-tab" data-tab="settings">Settings</button>
+        </nav>
+
+        <section class="panel-stack">
+          <div class="panel-heading">
+            <h2>Conversations</h2>
+            <button id="newConversationButton" class="ghost-button">New</button>
+          </div>
+          <div id="conversationList" class="conversation-list"></div>
+        </section>
+      </aside>
+
+      <main class="main-stage">
+        <section id="chatTab" class="tab-panel active">
+          <header class="section-header">
+            <div>
+              <p class="eyebrow">Live Session</p>
+              <h2 id="conversationTitle">New conversation</h2>
+            </div>
+            <div class="status-pills">
+              <span id="activeModelPill" class="status-pill">Model</span>
+              <span id="activeKeyPill" class="status-pill muted">No API key</span>
+            </div>
+          </header>
+
+          <div class="chat-layout">
+            <aside class="workspace-browser">
+              <div class="workspace-browser-header">
+                <div>
+                  <p class="eyebrow">Workspace Explorer</p>
+                  <h3>Browse and Target</h3>
+                </div>
+                <div class="workspace-browser-controls">
+                  <button id="workspaceUpButton" type="button" class="ghost-button">Up</button>
+                  <button id="refreshWorkspaceButton" type="button" class="ghost-button">Refresh</button>
+                </div>
+              </div>
+
+              <div class="workspace-browser-toolbar">
+                <div>
+                  <p class="item-meta">Current path</p>
+                  <p id="workspaceCurrentPath" class="workspace-current-path">.</p>
+                </div>
+                <div class="workspace-browser-controls">
+                  <button id="workspaceUseCurrentButton" type="button" class="ghost-button">Use Here</button>
+                  <button id="workspaceNewFolderButton" type="button" class="ghost-button">New Folder</button>
+                </div>
+              </div>
+
+              <p id="workspaceSelectionPath" class="soft-label">No save target selected yet.</p>
+              <div id="workspaceEntryList" class="workspace-entry-list"></div>
+            </aside>
+
+            <div class="chat-main">
+              <div id="chatMessages" class="message-stream"></div>
+
+              <form id="chatForm" class="composer">
+                <textarea id="chatInput" rows="4" placeholder="Ask ASTHRA V4 to inspect code, run a command, or create an automation..."></textarea>
+                <label class="chat-target-field">
+                  <span>Save Target</span>
+                  <input id="chatTargetPath" type="text" placeholder="Optional file or folder path, for example src/app or src/pages/home.js" />
+                </label>
+                <div class="composer-actions">
+                  <span id="chatStatus" class="soft-label">For coding tasks, ASTHRA will inspect existing files first, then write into the target you provide.</span>
+                  <button type="submit" class="primary-button">Send</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </section>
+
+        <section id="automationsTab" class="tab-panel">
+          <header class="section-header">
+            <div>
+              <p class="eyebrow">Scheduled Agents</p>
+              <h2>Automation Control</h2>
+            </div>
+          </header>
+
+          <div class="automation-grid">
+            <form id="automationForm" class="card automation-form">
+              <div class="card-header">
+                <h3 id="automationFormTitle">Create Automation</h3>
+                <button id="automationResetButton" type="button" class="ghost-button">Reset</button>
+              </div>
+
+              <label>
+                <span>Name</span>
+                <input id="automationName" type="text" placeholder="Morning workspace sweep" required />
+              </label>
+
+              <label>
+                <span>Cron Schedule</span>
+                <input id="automationSchedule" type="text" placeholder="0 9 * * 1-5" required />
+              </label>
+
+              <label>
+                <span>Model Override</span>
+                <input id="automationModel" type="text" placeholder="Optional OpenRouter model slug" />
+              </label>
+
+              <label>
+                <span>Prompt</span>
+                <textarea id="automationPrompt" rows="8" placeholder="Check the repo, summarize blockers, and create a status note if needed." required></textarea>
+              </label>
+
+              <label class="inline-toggle">
+                <input id="automationEnabled" type="checkbox" checked />
+                <span>Enabled</span>
+              </label>
+
+              <button type="submit" class="primary-button">Save Automation</button>
+            </form>
+
+            <div class="stack-column">
+              <section class="card">
+                <div class="card-header">
+                  <h3>Configured Automations</h3>
+                </div>
+                <div id="automationList" class="automation-list"></div>
+              </section>
+
+              <section class="card">
+                <div class="card-header">
+                  <h3>Recent Runs</h3>
+                </div>
+                <div id="runList" class="run-list"></div>
+              </section>
+            </div>
+          </div>
+        </section>
+
+        <section id="settingsTab" class="tab-panel">
+          <header class="section-header">
+            <div>
+              <p class="eyebrow">Runtime Configuration</p>
+              <h2>Provider and Agent Settings</h2>
+            </div>
+          </header>
+
+          <form id="settingsForm" class="settings-grid">
+            <section class="card">
+              <div class="card-header">
+                <h3>Provider</h3>
+              </div>
+
+              <label>
+                <span>API Key</span>
+                <textarea id="settingsKeys" rows="5" placeholder="Paste an OpenRouter, OpenAI, or Gemini API key"></textarea>
+              </label>
+
+              <div id="providerStatus" class="provider-banner">
+                <p class="item-title">Provider not detected yet</p>
+                <p class="item-meta">Paste a key and ASTHRA V4 will inspect it automatically.</p>
+              </div>
+
+              <div class="card-header compact">
+                <h3>Available Coding Models</h3>
+                <button id="refreshModelsButton" type="button" class="ghost-button">Refresh</button>
+              </div>
+
+              <div id="modelPicker" class="model-picker">
+                <div class="empty-state">OpenRouter models will appear here after a compatible key is detected.</div>
+              </div>
+
+              <label>
+                <span>Model Cooldown Seconds</span>
+                <input id="settingsCooldown" type="number" min="15" step="15" />
+              </label>
+            </section>
+
+            <section class="card">
+              <div class="card-header">
+                <h3>Behavior</h3>
+              </div>
+
+              <label>
+                <span>System Prompt</span>
+                <textarea id="settingsPrompt" rows="12"></textarea>
+              </label>
+
+              <label>
+                <span>Workspace Root</span>
+                <input id="settingsWorkspace" type="text" readonly />
+              </label>
+
+              <button type="submit" class="primary-button">Save Settings</button>
+            </section>
+          </form>
+
+          <section class="card key-state-card">
+            <div class="card-header">
+              <h3>Model Rotation Status</h3>
+            </div>
+            <div id="keyStateList" class="key-state-list"></div>
+          </section>
+        </section>
+      </main>
+    </div>
+
+    <script type="module" src="/ui.js"></script>
+  </body>
+</html>
